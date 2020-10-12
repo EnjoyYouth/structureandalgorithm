@@ -24,12 +24,15 @@ public class Trie<V> {
 		rootNode = new TrieNode<V>();
 	}
 
-	/** Inserts a word into the trie. */
+	/**
+	 * 插入键值对
+	 * @param word	字符串键, word不可为null
+	 * @param value	前缀树中需保留的数据
+	 */
 	public void insert(String word, V value) {
-		if (word == null || word.isEmpty()) {
+		if (word == null) {
 			throw new NullPointerException();
 		}
-
 		TrieNode<V> node = this.rootNode;
 		for (int i = 0; i < word.length(); i++) {
 			char key = word.charAt(i);
@@ -42,18 +45,15 @@ public class Trie<V> {
 				node.childMap.put(key, new TrieNode<V>());
 				node = node.childMap.get(key);
 			}
-
-//			最后一个字符所在节点的记录为完整字符串，如先前已存在则更新数据
-			if (i == word.length() - 1) {
-				node.isWorld = true;
-				node.data = value;
-			}
 		}
+//		最后一个字符所在节点的记录为完整字符串，如先前已存在则更新数据
+		node.isWorld = true;
+		node.data = value;
 	}
 
 	/** Returns if the word is in the trie. */
 	public boolean contains(String word) {
-		if (word == null || word.isEmpty()) {
+		if (word == null) {
 			return false;
 		}
 
@@ -74,7 +74,7 @@ public class Trie<V> {
 	 * Returns if there is any word in the trie that starts with the given prefix.
 	 */
 	public boolean containsPrefix(String prefix) {
-		if (prefix == null || prefix.isEmpty()) {
+		if (prefix == null) {
 			return false;
 		}
 
@@ -93,11 +93,11 @@ public class Trie<V> {
 	/**
 	 * 获取键所对应的值
 	 * @param key	键
-	 * @return	键所对应的数据
+	 * @return	键所对应的数据, key为null时返回null
 	 */
 	public V get(String key) {
-		if (key == null || key.isEmpty()) {
-			throw new NullPointerException();
+		if (key == null) {
+			return null;
 		}
 
 		TrieNode<V> node = this.rootNode;
@@ -116,11 +116,11 @@ public class Trie<V> {
 	/**
 	 * 返回key在前缀树中的最长前缀
 	 * @param key
-	 * @return
+	 * @return	最长前缀字符串，key为null时返回空串
 	 */
 	public String getLongestPrefix(String key) {
 		if (key == null || key.isEmpty()) {
-			throw new NullPointerException();
+			return "";
 		}
 		
 		TrieNode<V> node = this.rootNode;
