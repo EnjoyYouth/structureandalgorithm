@@ -14,7 +14,7 @@ public class Trie<V> {
 	/**
 	 * 前缀树根节点
 	 */
-	private TrieNode<V> rootNode;
+	protected TrieNode<V> rootNode;
 
 	/**
 	 * 初始化数据
@@ -26,8 +26,9 @@ public class Trie<V> {
 
 	/**
 	 * 插入键值对
-	 * @param word	字符串键, word不可为null
-	 * @param value	前缀树中需保留的数据
+	 * 
+	 * @param word  字符串键, word不可为null
+	 * @param value 前缀树中需保留的数据
 	 */
 	public void insert(String word, V value) {
 		if (word == null) {
@@ -89,11 +90,12 @@ public class Trie<V> {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 获取键所对应的值
-	 * @param key	键
-	 * @return	键所对应的数据, key为null时返回null
+	 * 
+	 * @param key 键
+	 * @return 键所对应的数据, key为null时返回null
 	 */
 	public V get(String key) {
 		if (key == null) {
@@ -112,17 +114,18 @@ public class Trie<V> {
 
 		return node.data;
 	}
-	
+
 	/**
 	 * 返回key在前缀树中的最长前缀
+	 * 
 	 * @param key
-	 * @return	最长前缀字符串，key为null时返回空串
+	 * @return 最长前缀字符串，key为null时返回空串
 	 */
 	public String getLongestPrefix(String key) {
 		if (key == null || key.isEmpty()) {
 			return "";
 		}
-		
+
 		TrieNode<V> node = this.rootNode;
 		int i = 0;
 		for (; i < key.length(); i++) {
@@ -130,20 +133,46 @@ public class Trie<V> {
 			if (!node.childMap.containsKey(ch)) {
 				break;
 			}
+			node = node.childMap.get(ch);
 		}
 		return key.substring(0, i);
 	}
-	
+
+	/**
+	 * 返回key在前缀树中的最长完整前缀字符串
+	 * 
+	 * @param key
+	 * @return 最长完整前缀字符串，key为null时返回空串
+	 */
+	public String getLongestExistsKey(String key) {
+		if (key == null || key.isEmpty()) {
+			return "";
+		}
+
+		TrieNode<V> node = this.rootNode;
+		int end = 0;
+		for (int i = 0; i < key.length(); i++) {
+			char ch = key.charAt(i);
+			if (!node.childMap.containsKey(ch)) {
+				break;
+			}
+			node = node.childMap.get(ch);
+//			更新下标值
+			end = node.isWorld ? i + 1 : end;
+		}
+		return key.substring(0, end);
+	}
+
 	/**
 	 * 前缀树子节点信息
 	 * 
 	 * @author wangsg3
 	 *
 	 */
-	class TrieNode<N> {
+	static class TrieNode<N> {
 //		是否为完整单词
 		boolean isWorld = false;
-		
+
 //		节点中缓存的数据
 		N data;
 
@@ -152,4 +181,3 @@ public class Trie<V> {
 	}
 
 }
-
